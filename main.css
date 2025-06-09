@@ -8,22 +8,21 @@
 
 body {
   font-family: 'Arial', sans-serif;
-  background: #f5f4f4;
+  background-color: #f5f4f4;
   display: flex;
   justify-content: center;
-}
-
-.container {
-  width: 100%;
-  max-width: 420px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  background-color: #faf8f8;
   min-height: 100vh;
   position: relative;
-  padding-bottom: 80px; /* leave space for footer */
+}
+
+.main-container {
+  background-color: #f7f3c3;
+  padding: 24px;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  padding-bottom: 100px; /* space for footer */
 }
 
 /* Header */
@@ -31,23 +30,12 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  margin-bottom: 24px;
 }
 
 .logo {
   width: 40px;
   height: 40px;
-}
-
-.title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #f57c00;
 }
 
 .header-icons i {
@@ -58,48 +46,85 @@ body {
 }
 
 /* QR Frame */
+
+
 .qr-frame {
-  height: 240px;
-  background-color: #fff3e0;
-  border: 2px dashed #ffcc80;
-  border-radius: 12px;
+  height: 200px;
+  background-color: #fff;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  text-align: center; /* Centers text and inline elements */
+  position: relative;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  color: #555;
-  padding: 12px;
+  flex-direction: column;
+  justify-content: center; /* Vertical centering */
+  align-items: center;     /* Horizontal centering for all elements */
 }
 
-/* Input Fields */
-.location-fields {
+.scan-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #ffd600;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.scan-btn:hover {
+  opacity: 0.8;
+}
+
+
+
+/* Form Styling */
+.trip-form {
   display: flex;
-  flex-direction: row;
-  gap: 10px;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.location-inputs {
+  display: flex;
+  gap: 12px; /* same gap as momo buttons */
+}
+
+.location-inputs .input-group {
+  flex: 1; /* take equal space */
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 6px;
+  color: #333;
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+.input-group i {
+  margin-right: 6px;
+  color: #f57c00;
+}
+
+.input-group input {
   width: 100%;
-  flex-wrap: wrap;
-}
-
-.location-input {
-  flex: 1;
-  min-width: 0;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 10px;
   border: 1px solid #ffcc80;
+  border-radius: 8px;
   font-size: 1rem;
+  background-color: #fff;
 }
-
 
 /* MoMo Buttons */
 .momo-buttons {
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
 }
 
 .momo-btn {
-  flex: 1 1 48%;
-  padding: 12px;
+  flex: 1;
+  padding: 10px;
   font-size: 1rem;
   font-weight: bold;
   border: none;
@@ -117,27 +142,21 @@ body {
   color: black;
 }
 
-/* Fare input */
-.fare-input input {
-  width: 100%;
-  padding: 12px;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: 1px solid #ffcc80;
-}
-
 /* Payment Button */
-.make-payment-btn {
-  margin-top: 10px;
-  padding: 12px;
-  width: 100%;
-  font-size: 1rem;
+.payment-btn {
   background: linear-gradient(to right, #f57c00, #ffd600);
   color: white;
+  font-weight: bold;
+  padding: 11px;
   border: none;
   border-radius: 8px;
-  font-weight: bold;
+  font-size: 1rem;
   cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.payment-btn:hover {
+  opacity: 0.9;
 }
 
 /* Footer */
@@ -165,3 +184,4 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
