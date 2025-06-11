@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GoPay Login</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-container {
+      background-color: #fff8dc;
+      padding: 30px 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 320px;
+    }
+
+    .logo {
+      background-color: #fff;
+      border-radius: 10px;
+      width: 50px;
+      height: 50px;
+      margin: 0 auto 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .logo span {
+      font-size: 28px;
+      color: white;
+      background-color: #f25022;
+      border-radius: 5px;
+      padding: 4px 8px;
+      font-weight: bold;
+    }
+
+    h2 {
+      color: #d97d00;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      text-align: left;
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #d97d00;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .form-group i {
+      margin-right: 5px;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(to right, #f59e0b, #f97316);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .login-btn:hover {
+      background: linear-gradient(to right, #f97316, #f59e0b);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <div class="logo">
+      <span>G</span>
+    </div>
+    <h2>Welcome to GoPay</h2>
+
+    <div class="form-group">
+      <label><i>👤</i> User Name</label>
+      <input type="text" placeholder="Alice K.">
+    </div>
+
+    <div class="form-group">
+      <label><i>📞</i> Phone Number</label>
+      <input type="text" placeholder="670123456">
+    </div>
+
+    <button class="login-btn">Login</button>
+  </div>
+
+</body>
+</html>
