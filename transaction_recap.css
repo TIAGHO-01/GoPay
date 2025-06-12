@@ -1,0 +1,143 @@
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #fafafa;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  max-width: 420px;
+  width: 100%;
+  padding: 20px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.header i {
+  font-size: 1.1rem;
+  color: #333;
+  cursor: pointer;
+}
+
+/* Card */
+.card {
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.product-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.product-info img {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+}
+
+.product-info h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.subtext {
+  margin: 0;
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.info-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 0.95rem;
+}
+
+.strong {
+  font-weight: bold;
+}
+
+/* Payment Method */
+.section-title {
+  color: #888;
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+}
+
+.payment-method {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.payment-method img {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: #eee;
+  object-fit: contain;
+}
+
+.payment-details {
+  flex-grow: 1;
+}
+
+.method-name {
+  display: block;
+  font-weight: 600;
+}
+
+.stars {
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.change-btn {
+  font-size: 0.85rem;
+  color: #f57c00;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* Totals */
+.total {
+  font-weight: bold;
+  color: #f57c00;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 12px 0;
+}
+
+/* Confirm Button */
+.confirm-btn {
+  width: 100%;
+  background-color: #f57c00;
+  color: white;
+  font-size: 1rem;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}

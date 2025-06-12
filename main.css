@@ -133,13 +133,29 @@ body {
   cursor: pointer;
 }
 
+
+
 .orange {
   background-color: #f57c00;
+  position: relative;
+  z-index: 1;
+}
+.orange.selected{
+  box-shadow:
+    0 0 0 3px #fff, /* White outer ring */
+    0 0 0 6px #f57c00; /* Color-based inner ring */
 }
 
 .mtn {
   background-color: #ffd600;
   color: black;
+   position: relative;
+  z-index: 1;
+}
+.mtn.selected{
+  box-shadow:
+    0 0 0 3px #fff, /* White outer ring */
+    0 0 0 6px #ffd600; /* Color-based inner ring */
 }
 
 /* Payment Button */

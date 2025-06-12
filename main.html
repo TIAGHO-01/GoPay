@@ -26,6 +26,7 @@
 <!-- QR Frame -->
 <div class="qr-frame" id="qrFrame">
   <p>Scan QR to get driver info</p>
+
   <button class="scan-btn" onclick="startQRScan()">
     <i class="fas fa-camera"></i>
   </button>
@@ -66,7 +67,7 @@
 
   <div class="input-group">
     <label for="fare"><i class="fas fa-money-bill"></i> Fare</label>
-    <input type="number" id="fare" placeholder="Enter fare amount" required />
+    <input type="number" id="fare" placeholder="Enter fare amount" inputmode="decimal" step="0.01" min="0" required />
   </div>
 
   <button type="submit" class="payment-btn">Make Payment</button>
@@ -83,43 +84,98 @@
 
 <script>
   function startQRScan() {
-    const html5QrCode = new Html5Qrcode("reader");
+  const html5QrCode = new Html5Qrcode("reader");
 
-    html5QrCode.start(
-      { facingMode: "environment" }, // Use rear camera
-      {
-        fps: 10,
-        qrbox: 250
-      },
-      (decodedText, decodedResult) => {
-        console.log("QR Code:", decodedText);
+  Html5Qrcode.getCameras().then(cameras => {
+    if (cameras && cameras.length) {
+      // Use the first available camera
+      const cameraId = cameras[0].id;
 
-        if (decodedText.startsWith("driver:")) {
-          const driverId = decodedText.split(":")[1];
+      html5QrCode.start(
+        cameraId,
+        {
+          fps: 10,
+          qrbox: { width: 250, height: 250 }
+        },
+        (decodedText, decodedResult) => {
+          console.log("QR Code:", decodedText);
 
-          fetch(`/api/driver/${driverId}`)
-            .then(res => res.json())
-            .then(driver => {
-              document.getElementById("driver-img").src = driver.profile_img;
-              document.getElementById("driver-name").textContent = `Name: ${driver.name}`;
-              document.getElementById("driver-matricule").textContent = `Matricule: ${driver.matricule}`;
-              document.getElementById("driver-phone").textContent = `Phone: ${driver.phone}`;
-              document.getElementById("driver-info").style.display = "block";
-              html5QrCode.stop(); // Stop scanning after success
-            })
-            .catch(err => {
-              console.error(err);
-              alert("Driver info not found.");
-              html5QrCode.stop();
-            });
+          if (decodedText.startsWith("driver:")) {
+            const driverId = decodedText.split(":")[1];
+
+            fetch(`/api/driver/${driverId}`)
+              .then(res => res.json())
+              .then(driver => {
+                document.getElementById("driver-img").src = driver.profile_img;
+                document.getElementById("driver-name").textContent = `Name: ${driver.name}`;
+                document.getElementById("driver-matricule").textContent = `Matricule: ${driver.matricule}`;
+                document.getElementById("driver-phone").textContent = `Phone: ${driver.phone}`;
+                document.getElementById("driver-info").style.display = "block";
+
+                html5QrCode.stop(); // Stop scanning after success
+              })
+              .catch(err => {
+                console.error(err);
+                alert("Driver info not found.");
+                html5QrCode.stop(); // Stop even if error
+              });
+          }
+        },
+        (errorMessage) => {
+          // console.log(`QR error: ${errorMessage}`); // optional
         }
-      },
-      (errorMessage) => {
-        // Optional: handle scan errors
-      }
-    );
-  }
+      );
+    }
+  }).catch(err => {
+    console.error("Camera access error:", err);
+    alert("Could not access camera.");
+  });
+}
+
 </script>
+
+<script>
+  // Ask for location on load
+  window.onload = function () {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          const { latitude, longitude } = position.coords;
+
+          // Optional: use reverse geocoding API to get readable address
+          fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`)
+            .then(res => res.json())
+            .then(data => {
+              const address = data.display_name;
+              document.getElementById("from").value = address || `${latitude}, ${longitude}`;
+            })
+            .catch(() => {
+              document.getElementById("from").value = `${latitude}, ${longitude}`;
+            });
+        },
+        error => {
+          console.warn("Geolocation denied or failed.");
+        }
+      );
+    } else {
+      alert("Geolocation is not supported by your browser.");
+    }
+  };
+</script>
+
+<script>
+  const momoButtons = document.querySelectorAll(".momo-btn");
+
+  momoButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      // Remove 'selected' class from all
+      momoButtons.forEach(b => b.classList.remove("selected"));
+      // Add 'selected' to clicked one
+      btn.classList.add("selected");
+    });
+  });
+</script>
+
 
 
 
