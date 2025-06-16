@@ -1,9 +1,28 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>GoPay Login</title>
   <style>
+    // Ajouter cette route après le GET /drivers
+app.post('/login', (req, res) => {
+  const { username, phone, matricule } = req.body;
+
+  if (!username || !phone || !matricule) {
+    return res.status(400).json({ error: 'Champs manquants' });
+  }
+
+  const sql = 'INSERT INTO driver (username, phone, matricule) VALUES (?, ?, ?)';
+  connection.query(sql, [username, phone, matricule], (err, result) => {
+    if (err) {
+      console.error('Erreur SQL :', err);
+      return res.status(500).json({ error: 'Erreur serveur' });
+    }
+    res.json({ success: true, id: result.insertId });
+  });
+});
+
     body {
       margin: 0;
       padding: 0;
