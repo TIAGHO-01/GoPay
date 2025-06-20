@@ -38,27 +38,54 @@ connection.connect(err => {
 // Handle login
 app.post('/login', (req, res) => {
   const { username, phone } = req.body;
-  const sql = 'SELECT * FROM client WHERE username = ? AND phone = ?';
 
-  connection.query(sql, [username, phone], (err, results) => {
+  // First, try to log in as a client
+  const clientSql = 'SELECT * FROM client WHERE username = ? AND phone = ?';
+  connection.query(clientSql, [username, phone], (err, clientResults) => {
     if (err) {
-      console.error('Login error:', err);
+      console.error('Client login error:', err);
       return res.status(500).send('Internal Server Error');
     }
 
-    if (results.length > 0) {
-      // Store user info in session
+    if (clientResults.length > 0) {
       req.session.user = {
-        id: results[0].id,
-        username: results[0].username,
-        phone: results[0].phone
+        type: 'client',
+        id: clientResults[0].id,
+        username: clientResults[0].username,
+        phone: clientResults[0].phone
       };
-      res.redirect('/main.html');
-    } else {
-      res.send('Invalid username or phone');
+      return res.redirect('/main.html');
     }
+
+    // If not a client, check if it's a driver
+    const driverSql = 'SELECT * FROM driver WHERE username = ? AND phone = ?';
+
+    connection.query(driverSql, [username, phone], (err, driverResults) => {
+
+      if (err) {
+        console.error('Driver login error:', err);
+        return res.status(500).send('Internal Server Error');
+      }
+
+      if (driverResults.length > 0) {
+        req.session.user = {
+  type: 'driver',
+  id: driverResults[0].id,
+  username: driverResults[0].username,  // ✅ fixed
+  phone: driverResults[0].phone,
+  matricule: driverResults[0].matricule,
+  profile_img: driverResults[0].profile_img
+};
+
+        return res.redirect('/driver_profile.html');
+      }
+
+      // If neither, invalid login
+      res.send('Invalid username or phone');
+    });
   });
 });
+
 
 // Endpoint to get session user info
 app.get('/api/user', (req, res) => {
@@ -71,7 +98,8 @@ app.get('/api/user', (req, res) => {
 
 app.get('/api/driver/:id', (req, res) => {
   const driverId = req.params.id;
-  const sql = 'SELECT name, matricule, phone, profile_img FROM driver WHERE id = ?';
+  const sql = 'SELECT username, matricule, phone, profile_img FROM driver WHERE id = ?';
+
 
   connection.query(sql, [driverId], (err, results) => {
     if (err) {

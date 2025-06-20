@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GoPay - Driver Profile</title>
+  <link rel="stylesheet" href="driver_profile.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+  <div class="main-container">
+    <!-- Header -->
+    <div class="header">
+      <img src="gopay-icon.png" alt="GoPay Logo" class="logo" />
+      <div class="header-icons">
+        <i class="fas fa-search"></i>
+        <i class="fas fa-bell"></i>
+        <i class="fas fa-circle-question"></i>
+      </div>
+    </div>
+
+    <!-- Profile Section -->
+   <!-- Profile Section -->
+<!-- Profile Section -->
+<div class="profile-section">
+  <div class="profile-content">
+    <!-- QR Frame with Icon -->
+    <div class="qr-frame">
+      <i class="fas fa-user-circle"></i>
+      <img src="/mnt/data/c44bfaa9-7abe-428b-9518-496353095a36.png" alt="Driver QR Code" class="qr-image"/>
+    </div>
+
+    <!-- Name -->
+    <div class="info-card">
+      <span class="label"></span>
+      <button class="edit-btn"><i class="fas fa-pencil-alt"></i></button>
+    </div>
+
+    <!-- Phone -->
+    <div class="info-card">
+      <span class="label"></span>
+      <button class="edit-btn"><i class="fas fa-pencil-alt"></i></button>
+    </div>
+
+    <!-- Matricule -->
+    <div class="info-card">
+      <span class="label"></span>
+      <button class="edit-btn"><i class="fas fa-pencil-alt"></i></button>
+    </div>
+  </div>
+</div>
+
+
+    <!-- Footer -->
+    <div class="footer">
+      <i class="fas fa-cog"></i>
+      <a href="main.html"><i class="fas fa-home"></i></a>
+      <i class="fas fa-user active"></i>
+    </div>
+  </div>
+
+<script>
+  fetch('/api/user')
+  .then(res => res.json())
+  .then(user => {
+    if (user.type === "driver") {
+      return fetch(`/api/driver/${user.id}`);
+    } else {
+      throw new Error("Not a driver");
+    }
+  })
+  .then(res => res.json())
+  .then(driver => {
+    document.querySelectorAll('.info-card')[0].querySelector('.label').textContent = driver.name;
+    document.querySelectorAll('.info-card')[1].querySelector('.label').textContent = driver.phone;
+    document.querySelectorAll('.info-card')[2].querySelector('.label').textContent = driver.matricule;
+  })
+  /*.catch(err => {
+    alert('You are not logged in or not a driver.');
+    window.location.href = '/client_login.html';
+  });*/
+</script>
+
+</body>
+</html>

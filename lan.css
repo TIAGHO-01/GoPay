@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: #fffdf2;
+  color: #333;
+}
+
+.landing-container {
+  max-width: 500px;
+  margin: auto;
+  padding: 24px 16px 64px;
+}
+
+/* Hero Section */
+.hero {
+  text-align: center;
+  padding: 40px 0 20px;
+}
+
+.hero-logo {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 12px;
+}
+
+.hero h1 {
+  font-size: 2rem;
+  color: #f57c00;
+  margin-bottom: 6px;
+}
+
+.tagline {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.cta-button {
+  display: inline-block;
+  background: linear-gradient(to right, #f57c00, #ffd600);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+/* Features */
+.features {
+  margin-top: 40px;
+}
+
+.features h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.feature {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.feature i {
+  font-size: 1.5rem;
+  color: #f57c00;
+  margin-top: 6px;
+}
+
+.feature h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #222;
+}
+
+.feature p {
+  margin: 4px 0 0;
+  font-size: 0.95rem;
+  color: #666;
+}
+
+/* Previews */
+.previews {
+  margin-top: 40px;
+}
+
+.previews h2 {
+  font-size: 1.4rem;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.preview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.preview-box {
+  background: #fff;
+  border: 2px dashed #ffd600;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  font-size: 0.9rem;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #444;
+}
+
+/* Footer */
+.landing-footer {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #aaa;
+  padding-top: 40px;
+}
