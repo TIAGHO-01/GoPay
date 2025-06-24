@@ -25,22 +25,24 @@
     <!-- QR Frame -->
 <!-- QR Frame -->
 <div class="qr-frame" id="qrFrame">
-  <p>Scan QR to get driver info</p>
+  <p id="qr-instruction">Scan QR to get driver info</p>
 
-  <button class="scan-btn" onclick="startQRScan()">
-    <i class="fas fa-camera"></i>
-  </button>
+<button id="scan-button" class="scan-btn" onclick="startQRScan()">
+  <i class="fas fa-camera"></i>
+</button>
+
 
   <!-- Scanner will mount here -->
   <div id="reader" style="width: 100%; margin-top: 10px;"></div>
 
-  <!-- Driver info shown after successful scan -->
-  <div id="driver-info" style="display: none; margin-top: 15px;">
-    <img id="driver-img" src="" alt="Driver" style="width: 100px; border-radius: 8px; margin-bottom: 10px;" />
-    <p id="driver-name"></p>
-    <p id="driver-matricule"></p>
-    <p id="driver-phone"></p>
+  <!-- Scan success checkmark -->
+<div id="scan-success" class="checkmark-container" style="display: none;">
+  <div class="checkmark-circle">
+    <i class="fas fa-check"></i>
   </div>
+  <p class="success-text">Driver Found</p>
+</div>
+
 </div>
 
 
@@ -104,16 +106,23 @@
             const driverId = decodedText.split(":")[1];
 
             fetch(`/api/driver/${driverId}`)
-              .then(res => res.json())
-              .then(driver => {
-                document.getElementById("driver-img").src = driver.profile_img;
-                document.getElementById("driver-name").textContent = `Name: ${driver.name}`;
-                document.getElementById("driver-matricule").textContent = `Matricule: ${driver.matricule}`;
-                document.getElementById("driver-phone").textContent = `Phone: ${driver.phone}`;
-                document.getElementById("driver-info").style.display = "block";
+  .then(res => res.json())
+  .then(driver => {
+    // Save to localStorage
+    localStorage.setItem("scanned_driver", JSON.stringify(driver));
 
-                html5QrCode.stop(); // Stop scanning after success
-              })
+    // Hide QR instruction and scan button
+    document.getElementById("qr-instruction").style.display = "none";
+    document.getElementById("scan-button").style.display = "none";
+
+    // Show checkmark
+    document.getElementById("scan-success").style.display = "flex";
+
+    // Stop scanning
+    html5QrCode.stop();
+  })
+
+
               .catch(err => {
                 console.error(err);
                 alert("Driver info not found.");
@@ -143,12 +152,15 @@
           const { latitude, longitude } = position.coords;
 
           // Optional: use reverse geocoding API to get readable address
-          fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`)
+          fetch(`/api/reverse-geocode?lat=${latitude}&lon=${longitude}`)
+
             .then(res => res.json())
             .then(data => {
-              const address = data.display_name;
-              document.getElementById("from").value = address || `${latitude}, ${longitude}`;
-            })
+  const address = data.address;
+  const formatted = address.neighbourhood || address.suburb || address.road || data.display_name;
+  document.getElementById("from").value = formatted;
+})
+
             .catch(() => {
               document.getElementById("from").value = `${latitude}, ${longitude}`;
             });
@@ -176,6 +188,33 @@
   });
 </script>
 
+<script>
+  document.querySelector('.payment-btn').addEventListener('click', function (e) {
+    e.preventDefault();
+
+    const from = document.getElementById('from').value;
+    const to = document.getElementById('to').value;
+    const fare = document.getElementById('fare').value;
+    const selectedMomo = document.querySelector('.momo-btn.selected')?.textContent.trim();
+
+   const scannedDriver = JSON.parse(localStorage.getItem("scanned_driver"));
+const driverMatricule = scannedDriver?.matricule || 'N/A';
+const driverPhone = scannedDriver?.phone || 'N/A';
+
+    // Store everything in localStorage
+    localStorage.setItem('gopay_transaction', JSON.stringify({
+      from,
+      to,
+      fare,
+      paymentMethod: selectedMomo || 'Unknown',
+      driverMatricule: driverMatricule || 'N/A',
+      driverPhone: driverPhone || 'N/A'
+    }));
+
+    // Redirect to recap page
+    window.location.href = 'transaction_recap.html';
+  });
+</script>
 
 
 

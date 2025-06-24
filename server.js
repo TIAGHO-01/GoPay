@@ -35,6 +35,44 @@ connection.connect(err => {
   console.log('Connected to MySQL');
 });
 
+const axios = require('axios'); // Make sure axios is installed
+
+app.get('/api/reverse-geocode', (req, res) => {
+  const { lat, lon } = req.query;
+
+  const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
+
+  axios.get(url, {
+    headers: {
+      'User-Agent': 'GoPayApp/1.0 (your-email@example.com)'
+    }
+  })
+  .then(response => {
+    res.json(response.data);
+  })
+  .catch(error => {
+    console.error('Reverse geocoding error:', error.message);
+    res.status(500).json({ error: 'Failed to reverse geocode location' });
+  });
+});
+
+const multer = require('multer');
+
+// Multer setup (save in root project folder)
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, __dirname); // same folder as HTML files
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    const filename = `driver_${Date.now()}${ext}`;
+    cb(null, filename);
+  }
+});
+
+const upload = multer({ storage });
+
+
 // Handle login
 app.post('/login', (req, res) => {
   const { username, phone } = req.body;
@@ -98,7 +136,8 @@ app.get('/api/user', (req, res) => {
 
 app.get('/api/driver/:id', (req, res) => {
   const driverId = req.params.id;
-  const sql = 'SELECT username, matricule, phone, profile_img FROM driver WHERE id = ?';
+  const sql = 'SELECT id, username, matricule, phone, profile_img FROM driver WHERE id = ?';
+
 
 
   connection.query(sql, [driverId], (err, results) => {
@@ -127,10 +166,78 @@ app.get('/driver/:id/qr', (req, res) => {
   });
 });
 
+// Handle client signup
+app.post('/signup', (req, res) => {
+  const { username, phone } = req.body;
+
+  const insertSql = 'INSERT INTO client (username, phone) VALUES (?, ?)';
+
+  connection.query(insertSql, [username, phone], (err, result) => {
+    if (err) {
+      console.error('Signup error:', err);
+      return res.status(500).send('Error during signup');
+    }
+
+    // Optional: Store the session for the new client
+    req.session.user = {
+      type: 'client',
+      id: result.insertId,
+      username,
+      phone
+    };
+
+    res.redirect('/main.html'); // redirect to client dashboard after signup
+  });
+});
+
+// Handle driver signup
+app.post('/driver-signup', (req, res) => {
+  const { username, phone, matricule } = req.body;
+
+  const insertSql = 'INSERT INTO driver (username, phone, matricule) VALUES (?, ?, ?)';
+
+  connection.query(insertSql, [username, phone, matricule], (err, result) => {
+    if (err) {
+      console.error('Driver signup error:', err);
+      return res.status(500).send('Error during driver signup');
+    }
+
+    // Optional: Store driver session
+    req.session.user = {
+      type: 'driver',
+      id: result.insertId,
+      username,
+      phone,
+      matricule
+    };
+
+    res.redirect('/driver_profile.html'); // Change this path if needed
+  });
+});
+
+
+// Upload driver profile image
+app.post('/upload-profile-img', upload.single('profile_img'), (req, res) => {
+  const driverId = req.session.user?.id;
+  if (!driverId) return res.status(401).send('Unauthorized');
+
+  const imgPath = req.file.filename;
+  const sql = 'UPDATE driver SET profile_img = ? WHERE id = ?';
+  connection.query(sql, [imgPath, driverId], (err) => {
+    if (err) {
+      console.error('Image upload error:', err);
+      return res.status(500).json({ success: false, error: 'Server error' });
+    }
+    req.session.user.profile_img = imgPath;
+    res.json({ success: true, imageUrl: `/${imgPath}` });
+  });
+});
+
+
 
 
 app.get('/favicon.ico', (req, res) => res.status(204));
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`Server running at http://localhost:${port}`);
 });
