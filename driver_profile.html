@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GoPay - Driver Profile</title>
+  <link rel="stylesheet" href="driver_profile.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+  <div class="main-container">
+    <!-- Header -->
+    <div class="header">
+      <img src="gopay-icon.png" alt="GoPay Logo" class="logo" />
+      <div class="header-icons">
+        <i class="fas fa-search"></i>
+        <i class="fas fa-bell"></i>
+        <i class="fas fa-circle-question"></i>
+      </div>
+    </div>
+
+    <!-- Profile Section -->
+   <!-- Profile Section -->
+<!-- Profile Section -->
+<!-- Profile Section -->
+<div class="profile-section">
+  <div class="profile-content">
+    <!-- QR Frame with Profile Image in Center -->
+    <div class="qr-frame">
+      <!-- QR Background Image -->
+      <img id="qr-code-img" class="qr-background" src="" alt="QR Code" />
+
+      <!-- Profile image form -->
+      <label for="profile_img">
+  <img id="profile-img" class="profile-circle" src="default.png" alt="Profile" />
+</label>
+<input type="file" id="profile_img" name="profile_img" accept="image/*" style="display: none;" />
+
+    </div>
+
+    <!-- Driver Info -->
+    <div class="info-card">
+      <span class="label"></span>
+      <button class="edit-btn"><i class="fas fa-pencil-alt"></i></button>
+    </div>
+    <div class="info-card">
+      <span class="label"></span>
+      <button class="edit-btn"><i class="fas fa-pencil-alt"></i></button>
+    </div>
+    <div class="info-card">
+      <span class="label"></span>
+      <button class="edit-btn"><i class="fas fa-pencil-alt"></i></button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Fullscreen QR Display -->
+<div id="qr-modal" class="qr-modal">
+  <span id="close-qr" class="close-btn">&times;</span>
+  <img id="qr-fullscreen" class="qr-fullscreen-img" src="" alt="Full QR Code" />
+</div>
+
+
+
+
+    <!-- Footer -->
+    <div class="footer">
+      <i class="fas fa-cog"></i>
+      <a href="main.html"><i class="fas fa-home"></i></a>
+      <i class="fas fa-user active"></i>
+    </div>
+  </div>
+
+<script>
+fetch('/api/user')
+  .then(res => res.json())
+  .then(user => {
+    if (user.type !== 'driver') throw new Error('Not a driver');
+
+    // Fill profile info
+    document.querySelectorAll('.info-card')[0].querySelector('.label').textContent = user.username;
+    document.querySelectorAll('.info-card')[1].querySelector('.label').textContent = user.phone;
+    document.querySelectorAll('.info-card')[2].querySelector('.label').textContent = user.matricule;
+
+    // Load QR Code and Profile Image
+    document.getElementById('qr-code-img').src = `/driver/${user.id}/qr`;
+    document.getElementById('profile-img').src = user.profile_img ? `/${user.profile_img}` : 'default.png';
+  })
+  .catch(err => {
+    console.error(err);
+    window.location.href = '/client_login.html';
+  });
+
+
+// Handle file upload
+document.getElementById('profile_img').addEventListener('change', function () {
+  const file = this.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append('profile_img', file);
+
+  fetch('/upload-profile-img', {
+    method: 'POST',
+    body: formData
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        document.getElementById('profile-img').src = data.imageUrl;
+        alert('Profile image updated!');
+      } else {
+        alert('Upload failed.');
+      }
+    })
+    .catch(err => {
+      console.error('Upload error:', err);
+      alert('Something went wrong.');
+    });
+});
+
+
+
+
+// Show QR full screen
+document.getElementById('qr-code-img').addEventListener('click', function () {
+  const src = this.src;
+  document.getElementById('qr-fullscreen').src = src;
+  document.getElementById('qr-modal').style.display = 'flex';
+});
+
+// Close QR modal
+document.getElementById('close-qr').addEventListener('click', function () {
+  document.getElementById('qr-modal').style.display = 'none';
+});
+
+
+</script>
+
+</body>
+</html>

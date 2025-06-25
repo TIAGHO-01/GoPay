@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GoPay Onboarding</title>
+  <link rel="stylesheet" href="F1.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <p class="slogan">Your Journey, Your Way.</p>
+    </div>
+    
+    <img src="Gopay_img.png" alt="Welcome to GoPay" class="welcome-image" />
+
+    <div class="role-selection">
+      <button class="role-btn client" onclick="chooseRole('client')">
+        <i class="fas fa-user"></i> Client
+      </button>
+      <button class="role-btn driver" onclick="chooseRole('driver')">
+        <i class="fas fa-car"></i> Driver
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function chooseRole(role) {
+  localStorage.setItem('userRole', role);
+  window.location.href = role === 'driver' ? 'driver_signup.html' : 'client_signup.html';
+}
+
+  </script>
+</body>
+</html>

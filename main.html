@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GoPay - Client Page</title>
+  <link rel="stylesheet" href="main.css" />
+  <script src="https://unpkg.com/html5-qrcode"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+  <div class="main-container">
+    <!-- Header -->
+    <div class="header">
+      <img src="gopay-icon.png" alt="GoPay Logo" class="logo" />
+      <div class="header-icons">
+        <i class="fas fa-search"></i>
+        <i class="fas fa-bell"></i>
+        <i class="fas fa-circle-question"></i>
+      </div>
+    </div>
+
+    <!-- QR Frame -->
+    <!-- QR Frame -->
+<!-- QR Frame -->
+<div class="qr-frame" id="qrFrame">
+  <p id="qr-instruction">Scan QR to get driver info</p>
+
+<button id="scan-button" class="scan-btn" onclick="startQRScan()">
+  <i class="fas fa-camera"></i>
+</button>
+
+
+  <!-- Scanner will mount here -->
+  <div id="reader" style="width: 100%; margin-top: 10px;"></div>
+
+  <!-- Scan success checkmark -->
+<div id="scan-success" class="checkmark-container" style="display: none;">
+  <div class="checkmark-circle">
+    <i class="fas fa-check"></i>
+  </div>
+  <p class="success-text">Driver Found</p>
+</div>
+
+</div>
+
+
+
+
+    <!-- Form Section -->
+    <form class="trip-form">
+  <div class="location-inputs">
+    <div class="input-group">
+      <label for="from"><i class="fas fa-map-marker-alt"></i> From</label>
+      <input type="text" id="from" placeholder="Pickup location" required />
+    </div>
+
+    <div class="input-group">
+      <label for="to"><i class="fas fa-map-marker-alt"></i> To</label>
+      <input type="text" id="to" placeholder="Drop-off location" required />
+    </div>
+  </div>
+
+  <div class="momo-buttons">
+    <button type="button" class="momo-btn orange">Orange Money</button>
+    <button type="button" class="momo-btn mtn">MTN MoMo</button>
+  </div>
+
+  <div class="input-group">
+    <label for="fare"><i class="fas fa-money-bill"></i> Fare</label>
+    <input type="number" id="fare" placeholder="Enter fare amount" inputmode="decimal" step="0.01" min="0" required />
+  </div>
+
+  <button type="submit" class="payment-btn">Make Payment</button>
+</form>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <i class="fas fa-cog"></i>
+    <i class="fas fa-home active"></i>
+    <a href="client_profile.html"><i class="fas fa-user"></i></a>
+  </div>
+
+<script>
+  function startQRScan() {
+  const html5QrCode = new Html5Qrcode("reader");
+
+  Html5Qrcode.getCameras().then(cameras => {
+    if (cameras && cameras.length) {
+      // Use the first available camera
+      const cameraId = cameras[0].id;
+
+      html5QrCode.start(
+        cameraId,
+        {
+          fps: 10,
+          qrbox: { width: 250, height: 250 }
+        },
+        (decodedText, decodedResult) => {
+          console.log("QR Code:", decodedText);
+
+          if (decodedText.startsWith("driver:")) {
+            const driverId = decodedText.split(":")[1];
+
+            fetch(`/api/driver/${driverId}`)
+  .then(res => res.json())
+  .then(driver => {
+    // Save to localStorage
+    localStorage.setItem("scanned_driver", JSON.stringify(driver));
+
+    // Hide QR instruction and scan button
+    document.getElementById("qr-instruction").style.display = "none";
+    document.getElementById("scan-button").style.display = "none";
+
+    // Show checkmark
+    document.getElementById("scan-success").style.display = "flex";
+
+    // Stop scanning
+    html5QrCode.stop();
+  })
+
+
+              .catch(err => {
+                console.error(err);
+                alert("Driver info not found.");
+                html5QrCode.stop(); // Stop even if error
+              });
+          }
+        },
+        (errorMessage) => {
+          // console.log(`QR error: ${errorMessage}`); // optional
+        }
+      );
+    }
+  }).catch(err => {
+    console.error("Camera access error:", err);
+    alert("Could not access camera.");
+  });
+}
+
+</script>
+
+<script>
+  // Ask for location on load
+  window.onload = function () {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          const { latitude, longitude } = position.coords;
+
+          // Optional: use reverse geocoding API to get readable address
+          fetch(`/api/reverse-geocode?lat=${latitude}&lon=${longitude}`)
+
+            .then(res => res.json())
+            .then(data => {
+  const address = data.address;
+  const formatted = address.neighbourhood || address.suburb || address.road || data.display_name;
+  document.getElementById("from").value = formatted;
+})
+
+            .catch(() => {
+              document.getElementById("from").value = `${latitude}, ${longitude}`;
+            });
+        },
+        error => {
+          console.warn("Geolocation denied or failed.");
+        }
+      );
+    } else {
+      alert("Geolocation is not supported by your browser.");
+    }
+  };
+</script>
+
+<script>
+  const momoButtons = document.querySelectorAll(".momo-btn");
+
+  momoButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      // Remove 'selected' class from all
+      momoButtons.forEach(b => b.classList.remove("selected"));
+      // Add 'selected' to clicked one
+      btn.classList.add("selected");
+    });
+  });
+</script>
+
+<script>
+  document.querySelector('.payment-btn').addEventListener('click', function (e) {
+    e.preventDefault();
+
+    const from = document.getElementById('from').value;
+    const to = document.getElementById('to').value;
+    const fare = document.getElementById('fare').value;
+    const selectedMomo = document.querySelector('.momo-btn.selected')?.textContent.trim();
+
+   const scannedDriver = JSON.parse(localStorage.getItem("scanned_driver"));
+const driverMatricule = scannedDriver?.matricule || 'N/A';
+const driverPhone = scannedDriver?.phone || 'N/A';
+
+    // Store everything in localStorage
+    localStorage.setItem('gopay_transaction', JSON.stringify({
+      from,
+      to,
+      fare,
+      paymentMethod: selectedMomo || 'Unknown',
+      driverMatricule: driverMatricule || 'N/A',
+      driverPhone: driverPhone || 'N/A'
+    }));
+
+    // Redirect to recap page
+    window.location.href = 'transaction_recap.html';
+  });
+</script>
+
+
+
+</body>
+</html>

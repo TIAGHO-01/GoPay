@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GoPay - Driver Sign Up</title>
+  <link rel="stylesheet" href="driver_signup.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+  <div class="signup-container">
+    <div class="logo-section">
+      <img src="gopay-icon.png" alt="GoPay Logo" class="signup-logo" />
+      <h2 class="signup-title">Driver Registration</h2>
+    </div>
+
+    <form class="signup-form" action="/driver-signup" method="POST">
+      <div class="input-group">
+        <label for="username"><i class="fas fa-user"></i> User Name</label>
+        <input type="text" id="username" name="username" placeholder="Enter username" required />
+      </div>
+
+      <div class="input-group">
+        <label for="phone"><i class="fas fa-phone"></i> Phone Number</label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          value="+237 "
+          placeholder="+237 6XX XXX XXX"
+          required
+        />
+      </div>
+
+      <div class="input-group">
+        <label for="matricule"><i class="fas fa-id-card"></i> Matricule</label>
+        <input type="text" id="matricule" name="matricule" placeholder="Enter vehicle matricule" required />
+      </div>
+
+      <button type="submit" class="signup-btn">Sign Up</button>
+
+      <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem;">
+  Already have an account?
+  <a href="client_login.html" style="color: #f57c00; text-decoration: none; font-weight: bold;">
+    Login here
+  </a>
+</p>
+
+    </form>
+  </div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GoPay - Profile</title>
+  <link rel="stylesheet" href="client_profile.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+  <div class="main-container">
+    <!-- Header -->
+    <div class="header">
+      <img src="gopay-icon.png" alt="GoPay Logo" class="logo" />
+      <div class="header-icons">
+        <i class="fas fa-search"></i>
+        <i class="fas fa-bell"></i>
+        <i class="fas fa-circle-question"></i>
+      </div>
+    </div>
+
+    <!-- Profile Section -->
+    <div class="profile-section">
+      <div class="profile-icon">
+        <i class="fas fa-user-circle"></i>
+      </div>
+
+      <!-- Name -->
+      <div class="info-card">
+        <span class="label"></span>
+        <button class="edit-btn"><i class="fas fa-pencil-alt"></i></button>
+      </div>
+
+      <!-- Phone -->
+      <div class="info-card">
+        <span class="label"></span>
+        <button class="edit-btn"><i class="fas fa-pencil-alt"></i></button>
+      </div>
+
+      <!-- Rides History -->
+      <div class="info-card">
+        <span class="label">Rides History</span>
+        <button class="arrow-btn"><i class="fas fa-arrow-right"></i></button>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <i class="fas fa-cog"></i>
+      <a href="main.html"><i class="fas fa-home"></i></a>
+      <i class="fas fa-user active"></i>
+    </div>
+  </div>
+
+<script>
+  fetch('/api/user')
+    .then(response => {
+      if (!response.ok) throw new Error('Not logged in');
+      return response.json();
+    })
+    .then(user => {
+      document.querySelectorAll('.info-card')[0].querySelector('.label').textContent = user.username;
+      document.querySelectorAll('.info-card')[1].querySelector('.label').textContent = user.phone;
+    })
+    .catch(err => {
+      alert('You are not logged in. Redirecting to login page...');
+      window.location.href = '/login.html';
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,232 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f5f4f4;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  position: relative;
+}
+
+.main-container {
+  background-color: #f7f3c3;
+  padding: 24px;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  padding-bottom: 100px; /* space for footer */
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.logo {
+  width: 40px;
+  height: 40px;
+}
+
+.header-icons i {
+  font-size: 1.2rem;
+  margin-left: 16px;
+  color: #444;
+  cursor: pointer;
+}
+
+/* QR Frame */
+
+
+.qr-frame {
+  height: 200px;
+  background-color: #fff;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  text-align: center; /* Centers text and inline elements */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Vertical centering */
+  align-items: center;     /* Horizontal centering for all elements */
+}
+
+.scan-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #ffd600;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.scan-btn:hover {
+  opacity: 0.8;
+}
+
+
+.checkmark-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.checkmark-circle {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(to right, #f57c00, #ffd600);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.checkmark-circle i {
+  color: white;
+  font-size: 36px;
+}
+
+.success-text {
+  margin-top: 10px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color:  #fdd72ae7;
+}
+
+/* Form Styling */
+.trip-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.location-inputs {
+  display: flex;
+  gap: 12px; /* same gap as momo buttons */
+}
+
+.location-inputs .input-group {
+  flex: 1; /* take equal space */
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 6px;
+  color: #333;
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+.input-group i {
+  margin-right: 6px;
+  color: #f57c00;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ffcc80;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #fff;
+}
+
+/* MoMo Buttons */
+.momo-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.momo-btn {
+  flex: 1;
+  padding: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
+
+
+
+.orange {
+  background-color: #f57c00;
+  position: relative;
+  z-index: 1;
+}
+.orange.selected{
+  box-shadow:
+    0 0 0 3px #fff, /* White outer ring */
+    0 0 0 6px #f57c00; /* Color-based inner ring */
+}
+
+.mtn {
+  background-color: #ffd600;
+  color: black;
+   position: relative;
+  z-index: 1;
+}
+.mtn.selected{
+  box-shadow:
+    0 0 0 3px #fff, /* White outer ring */
+    0 0 0 6px #ffd600; /* Color-based inner ring */
+}
+
+/* Payment Button */
+.payment-btn {
+  background: linear-gradient(to right, #f57c00, #ffd600);
+  color: white;
+  font-weight: bold;
+  padding: 11px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.payment-btn:hover {
+  opacity: 0.9;
+}
+
+/* Footer */
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  max-width: 420px;
+  background-color: #fff3e0;
+  padding: 10px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #ffe0b2;
+}
+
+.footer i {
+  font-size: 1.5rem;
+  color: #aaa;
+  cursor: pointer;
+}
+
+.footer .active {
+  background: linear-gradient(to right, #f57c00, #ffd600);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
