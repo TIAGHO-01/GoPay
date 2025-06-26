@@ -1,0 +1,47 @@
+const express = require('express');
+const cors = require('cors');
+const mysql = require('mysql2');
+
+const app = express();
+const port = 3000;
+
+app.use(cors());
+app.use(express.json());
+
+// Connexion MySQL
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'MentraConnection1.0', // ← modifie selon ton mot de passe
+  database: 'GoPay'
+});
+
+connection.connect((err) => {
+  if (err) {
+    console.error('Erreur de connexion à MySQL :', err);
+  } else {
+    console.log('Connecté à la base GoPay ✅');
+  }
+});
+
+// Route pour enregistrer un chauffeur
+app.post('/login', (req, res) => {
+  const { username, phone, matricule } = req.body;
+
+  if (!username || !phone || !matricule) {
+    return res.status(400).json({ error: 'Champs manquants' });
+  }
+
+  const sql = 'INSERT INTO driver (username, phone, matricule) VALUES (?, ?, ?)';
+  connection.query(sql, [username, phone, matricule], (err, result) => {
+    if (err) {
+      console.error('Erreur SQL :', err);
+      return res.status(500).json({ error: 'Erreur serveur' });
+    }
+    res.json({ success: true, id: result.insertId });
+  });
+});
+
+app.listen(port, () => {
+  console.log(`Serveur GoPay lancé sur http://localhost:${port}`);
+});
